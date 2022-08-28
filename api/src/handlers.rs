@@ -44,9 +44,10 @@ pub async fn fetch_wait_times(id: String) -> Result<Vec<WaitTime>, reqwest::Erro
 pub async fn get_wait_times(data: web::Path<IThemeParkId>) -> impl Responder {
 
     let res = fetch_wait_times(data.id.clone()).await;
-    HttpResponse::Ok().json(res.unwrap())
-    
-
+    match res {
+        Ok(_) => HttpResponse::Ok().json(res.unwrap()),
+        Err(_) => HttpResponse::NotFound().body("404 not found") 
+    }
 }
 
 #[get("/attractions/{id}")]
